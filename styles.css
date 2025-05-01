@@ -1,25 +1,9 @@
-.error-banner {
-    display: flex;
-    align-items: center;
-    background-color: #e91429;
-    color: white;
-    padding: 10px 16px;
-    border-radius: 4px;
-    margin-bottom: 20px;
-    font-size: 14px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
-
-.error-icon {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}* {
-     margin: 0;
-     padding: 0;
-     box-sizing: border-box;
-     font-family: Arial, sans-serif;
- }
 
 body {
     background-color: #121212;
@@ -204,6 +188,24 @@ h1 {
 .signup-link a {
     color: white;
     text-decoration: underline;
+}
+
+.error-banner {
+    display: flex;
+    align-items: center;
+    background-color: #e91429;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.error-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Mobile responsive */
