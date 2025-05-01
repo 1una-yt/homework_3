@@ -6,18 +6,24 @@ document.addEventListener('DOMContentLoaded', function() {
     const eyeIcon = document.getElementById('eyeIcon');
     const eyeSlashIcon = document.getElementById('eyeSlashIcon');
 
+    // 初始狀態下，密碼是隱藏的，所以顯示帶斜線的眼睛圖標
+    eyeIcon.style.display = 'none';
+    eyeSlashIcon.style.display = 'inline';
+
     // 密碼顯示/隱藏的切換功能
     togglePassword.addEventListener('click', function() {
         if (passwordInput.getAttribute('type') === 'password') {
-            // 切換為顯示密碼
+            // 切換為顯示密碼（文字明文顯示）
             passwordInput.setAttribute('type', 'text');
-            eyeIcon.style.display = 'none';
-            eyeSlashIcon.style.display = 'inline';
-        } else {
-            // 切換為隱藏密碼
-            passwordInput.setAttribute('type', 'password');
+            // 顯示正常的眼睛圖標（表示可以看到密碼）
             eyeIcon.style.display = 'inline';
             eyeSlashIcon.style.display = 'none';
+        } else {
+            // 切換為隱藏密碼（文字顯示為點或星號）
+            passwordInput.setAttribute('type', 'password');
+            // 顯示眼睛上有斜線的圖標（表示看不到密碼）
+            eyeIcon.style.display = 'none';
+            eyeSlashIcon.style.display = 'inline';
         }
     });
 

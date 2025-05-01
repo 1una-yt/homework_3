@@ -135,7 +135,8 @@ h1 {
 
 .form-group input:focus {
     outline: none;
-    border-color: #1DB954;
+    border-color: white;
+    border-width: 2px;
 }
 
 .show-password {
@@ -178,6 +179,11 @@ h1 {
     color: white;
     text-decoration: underline;
     font-size: 14px;
+    transition: color 0.2s;
+}
+
+.forgot-password a:hover {
+    color: #1DB954;
 }
 
 .signup-link {
@@ -188,6 +194,11 @@ h1 {
 .signup-link a {
     color: white;
     text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.signup-link a:hover {
+    color: #1DB954;
 }
 
 .error-banner {
