@@ -5,6 +5,9 @@ document.getElementById('togglePassword').addEventListener('click', function() {
     passwordInput.setAttribute('type', type);
 });
 
+// 隱藏錯誤訊息（初始狀態）
+document.getElementById('error-message').style.display = 'none';
+
 // 表單提交事件處理
 document.getElementById('loginForm').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -15,16 +18,14 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     // 表單驗證
     let isValid = true;
 
-    // 驗證電子郵件/用戶名
-    if (!email.trim()) {
+    // 驗證電子郵件/用戶名和密碼
+    if (!email.trim() || !password.trim()) {
         isValid = false;
-        // 可以在這裡添加錯誤提示
-    }
-
-    // 驗證密碼
-    if (!password.trim()) {
-        isValid = false;
-        // 可以在這裡添加錯誤提示
+        // 顯示錯誤訊息
+        document.getElementById('error-message').style.display = 'flex';
+    } else {
+        // 隱藏錯誤訊息
+        document.getElementById('error-message').style.display = 'none';
     }
 
     if (isValid) {
