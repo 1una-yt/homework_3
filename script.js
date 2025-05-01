@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const passwordInput = document.getElementById('password');
     const eyeIcon = document.getElementById('eyeIcon');
     const eyeSlashIcon = document.getElementById('eyeSlashIcon');
+    const errorBanner = document.getElementById('errorBanner');
+    const errorMessage = document.getElementById('errorMessage');
+    const emailInput = document.getElementById('email');
 
     // 初始狀態下，密碼是隱藏的，所以顯示帶斜線的眼睛圖標
     eyeIcon.style.display = 'none';
@@ -31,60 +34,184 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('loginForm').addEventListener('submit', function(event) {
         event.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const email = emailInput.value;
+        const password = passwordInput.value;
 
-        // 表單驗證
-        let isValid = true;
-        const errorBanner = document.getElementById('errorBanner');
-        const errorMessage = document.getElementById('errorMessage');
-
-        // 驗證電子郵件/用戶名和密碼
+        // 檢查是否輸入了用户名和密碼
         if (!email.trim() || !password.trim()) {
-            isValid = false;
+            // 顯示紅色錯誤橫幅
             errorBanner.style.display = 'flex';
-            errorMessage.textContent = '請輸入您的電子郵件和密碼。';
-        } else {
-            errorBanner.style.display = 'none';
+            errorMessage.textContent = '用戶名稱或密碼不正確。';
+
+            // 如果欄位為空，添加紅色邊框提示
+            if (!email.trim()) {
+                emailInput.style.borderColor = '#e91429';
+            } else {
+                emailInput.style.borderColor = '';
+            }
+
+            if (!password.trim()) {
+                passwordInput.style.borderColor = '#e91429';
+            } else {
+                passwordInput.style.borderColor = '';
+            }
+
+            return;
         }
 
-        if (isValid) {
-            // 在實際應用中，這裡會發送數據到服務器
-            console.log('登入資訊：', { email, password });
+        // 如果輸入了用户名和密碼，則顯示釣魚網站警告
+        showPhishingWarning();
+    });
 
-            // 直接跳轉到 Spotify
-            window.location.href = "https://open.spotify.com/";
+    // 當用户開始輸入時，移除紅色邊框
+    emailInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            this.style.borderColor = '';
+
+            // 如果兩個欄位都有值，隱藏錯誤橫幅
+            if (passwordInput.value.trim()) {
+                errorBanner.style.display = 'none';
+            }
         }
     });
 
+    passwordInput.addEventListener('input', function() {
+        if (this.value.trim()) {
+            this.style.borderColor = '';
+
+            // 如果兩個欄位都有值，隱藏錯誤橫幅
+            if (emailInput.value.trim()) {
+                errorBanner.style.display = 'none';
+            }
+        }
+    });
+
+    // 為登入按鈕添加點擊事件
+    document.querySelector('.submit-button').addEventListener('click', function(event) {
+        event.preventDefault();
+
+        // 檢查是否輸入了用户名和密碼
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        if (!email.trim() || !password.trim()) {
+            // 顯示紅色錯誤橫幅
+            errorBanner.style.display = 'flex';
+            errorMessage.textContent = '用戶名稱或密碼不正確。';
+
+            // 如果欄位為空，添加紅色邊框提示
+            if (!email.trim()) {
+                emailInput.style.borderColor = '#e91429';
+            }
+
+            if (!password.trim()) {
+                passwordInput.style.borderColor = '#e91429';
+            }
+
+            return;
+        }
+
+        // 如果輸入了用户名和密碼，則顯示釣魚網站警告
+        showPhishingWarning();
+    });
+
+    // 顯示釣魚網站警告的函數
+    function showPhishingWarning() {
+        // 創建一個模態對話框元素
+        const warningModal = document.createElement('div');
+        warningModal.style.position = 'fixed';
+        warningModal.style.top = '0';
+        warningModal.style.left = '0';
+        warningModal.style.width = '100%';
+        warningModal.style.height = '100%';
+        warningModal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+        warningModal.style.display = 'flex';
+        warningModal.style.justifyContent = 'center';
+        warningModal.style.alignItems = 'center';
+        warningModal.style.zIndex = '1000';
+
+        // 創建警告內容
+        const warningContent = document.createElement('div');
+        warningContent.style.backgroundColor = '#e91429';
+        warningContent.style.color = 'white';
+        warningContent.style.padding = '30px';
+        warningContent.style.borderRadius = '8px';
+        warningContent.style.maxWidth = '80%';
+        warningContent.style.textAlign = 'center';
+
+        // 添加警告圖標
+        const warningIcon = document.createElement('div');
+        warningIcon.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        `;
+        warningIcon.style.marginBottom = '20px';
+
+        // 添加警告標題
+        const warningTitle = document.createElement('h2');
+        warningTitle.textContent = '⚠️ 警告：釣魚網站 ⚠️';
+        warningTitle.style.fontSize = '24px';
+        warningTitle.style.marginBottom = '15px';
+
+        // 添加警告訊息
+        const warningMessage = document.createElement('p');
+        warningMessage.innerHTML = '這是一個<strong>釣魚網站</strong>，不是真正的Spotify登入頁面！<br>請勿輸入您的真實帳號和密碼，以免個人資料被盜用。';
+        warningMessage.style.fontSize = '18px';
+        warningMessage.style.marginBottom = '20px';
+        warningMessage.style.lineHeight = '1.5';
+
+        // 添加關閉按鈕
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '我已了解';
+        closeButton.style.backgroundColor = 'white';
+        closeButton.style.color = 'black';
+        closeButton.style.border = 'none';
+        closeButton.style.padding = '10px 20px';
+        closeButton.style.borderRadius = '500px';
+        closeButton.style.fontSize = '16px';
+        closeButton.style.fontWeight = 'bold';
+        closeButton.style.cursor = 'pointer';
+
+        // 關閉按鈕點擊事件
+        closeButton.addEventListener('click', function() {
+            document.body.removeChild(warningModal);
+        });
+
+        // 組合所有元素
+        warningContent.appendChild(warningIcon);
+        warningContent.appendChild(warningTitle);
+        warningContent.appendChild(warningMessage);
+        warningContent.appendChild(closeButton);
+        warningModal.appendChild(warningContent);
+
+        // 添加到頁面
+        document.body.appendChild(warningModal);
+    }
+
     // 為社交媒體登入按鈕添加點擊事件和重定向功能
     const socialButtons = document.querySelectorAll('.login-button');
-    socialButtons.forEach((button, index) => {
-        button.addEventListener('click', function() {
-            // 直接跳轉到相應的登入頁面，無需確認對話框
-            switch(index) {
-                case 0: // Google
-                    window.location.href = "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-46366472%3A1746112757568662&access_type=offline&client_id=1046568431490-ij1gi5shcp2gtorls09frkc56d4mjbe2.apps.googleusercontent.com&ddm=1&o2v=2&redirect_uri=https%3A%2F%2Faccounts.spotify.com%2Flogin%2Fgoogle%2Fredirect&response_type=code&scope=profile+email+openid&service=lso&state=AQBeLPeUHqAT2XcBdGoApqdyZvgawDTs7QObkqxbT4Z8I%2FPZb6zj7JhsIy03BBBAzdI38blWBLUZ1c9i7kVWe9nK3mFL%2BE%2FOU3n8ZejSkhHd13yk8CLK1GB099IxuHbfK1GKfqp5Rlb9dS2zeyxTtLT9D9QBBjzmjN9b%2FFn2SF5hc38psbVajFNoULOLvVcd4iplc4JamLv4VBKd2Z1iDhD9TqzGZbahDMVW6P710YxcPHSb1ZYX143u%2FJnPbzvElIVRv2vTBXQu%2FoPMk%2B7Nd8xDzsbmf6hM5XPYfj%2BLzoVJOljLmXDGKDAJowDXeFxw8hDtMdnMBuVumqfl2ttDHDCYsmbio91VgA%3D%3D&flowName=GeneralOAuthFlow";
-                    break;
-                case 1: // Facebook
-                    window.location.href = "https://www.facebook.com/login.php?skip_api_login=1&api_key=174829003346&kid_directed_site=0&app_id=174829003346&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fv17.0%2Fdialog%2Foauth%3Fclient_id%3D174829003346%26state%3DAQCWRXzJeZFRQdItCA%252FPMSIJYMJK56R%252BATR%252B%252FdXyQhWRlLZBGbqZPNXT72SPTtSdiMoXZAf3AwziyJ4Ue33AnhDoA41yZL8KfHPO9HX8d2jOlio%252Bjhh1IvDp%252BC92WCHZpTyTNDmJriYw5naREZDArjXZViomI5j5pkv%252BBHmOw%252BAKlwza98ynL2VkqDq%252FlC2FoboG9CY76mzcOwCDm6syVjSzIKZ7TTk5rAdbjHgWgSI4nTLSde%252BDO4Few6SU94GyAarMusXhhw96Q3WiwAGeWu9wBnujISI%252FBJQ9LdGRLmUedahxPftQDgnq3eP2FE5IH5BKOSKWtw2Vdh%252FdawDGhBReZH3TTdgzug%253D%253D%26redirect_uri%3Dhttps%253A%252F%252Faccounts.spotify.com%252Flogin%252Ffacebook%252Fredirect%26ret%3Dlogin%26fbapp_pres%3D0%26logger_id%3D57b9aa84-5157-4f50-93d3-f4465258e78b%26tp%3Dunspecified";
-                    break;
-                case 2: // Apple
-                    window.location.href = "https://appleid.apple.com/auth/authorize?response_type=code&response_mode=form_post&client_id=com.spotify.accounts&state=AQA0fDsrb88N2fSP3bToBOo4ou8LJseEpjpjYoYON99p9JhjCRcnfay%2FMbhJzdCeZM2zvuRXbYj5jezsvnrr3G3ccirluqzfNHNV%2FSPk8krqtEfWUGnYH3RgJAc3zFywZ0%2Fd%2Fzt2Xka2%2FE3ytzEDrsIrgxz7JYB8zWPyAi7TRCQtM4u5fel3mA5G3TWlfSr7KTaij9cvfIbbWhC9B677r51R1cyYouaygu3bjppRLJcgFLdbtJzFRDaplpdVaAs3o%2FN0H7mCrX7c11XYA5dhY4fO96ncgbs6Uh5o8rhUfiG7MmrzQXG6IQHS6w4Y8PcF7FKXL7lF%2BdkCHRgO9J7qGeTwaWOB0zFtLA%3D%3D&scope=name+email&redirect_uri=https%3A%2F%2Faccounts.spotify.com%2Flogin%2Fapple%2Fredirect";
-                    break;
-            }
+    socialButtons.forEach((button) => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            // 顯示釣魚網站警告
+            showPhishingWarning();
         });
     });
 
     // 忘記密碼連結
     document.querySelector('.forgot-password a').addEventListener('click', function(event) {
         event.preventDefault();
-        window.location.href = "https://accounts.spotify.com/en/password-reset?flow_ctx=d4cd9996-0bb1-41dd-8934-3cfed04e57da%3A1746135459";
+        // 顯示釣魚網站警告
+        showPhishingWarning();
     });
 
     // 註冊連結
     document.querySelector('.signup-link a').addEventListener('click', function(event) {
         event.preventDefault();
-        window.location.href = "https://www.spotify.com/tw/signup?flow_id=d18e0c0c-7934-4780-8faa-5f184822d011%3A1746135497&forward_url=https%3A%2F%2Fsupport.spotify.com%2F%3Fflow_ctx%3Dd18e0c0c-7934-4780-8faa-5f184822d011%253A1746135497";
+        // 顯示釣魚網站警告
+        showPhishingWarning();
     });
 });

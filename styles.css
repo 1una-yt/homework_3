@@ -201,6 +201,7 @@ h1 {
     color: #1DB954;
 }
 
+/* 修改錯誤橫幅樣式，使其更接近參考圖片 */
 .error-banner {
     display: flex;
     align-items: center;
@@ -218,6 +219,8 @@ h1 {
     align-items: center;
     justify-content: center;
 }
+
+
 
 /* Mobile responsive */
 @media (max-width: 480px) {
